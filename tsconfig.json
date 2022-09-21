@@ -1,0 +1,31 @@
+{
+  "compileOnSave": false,
+  "compilerOptions": {
+    "baseUrl": "./",
+    "outDir": "./dist/out-tsc",
+    "sourceMap": true,
+    "declaration": false,
+    "downlevelIteration": true,
+    "experimentalDecorators": true,
+    "moduleResolution": "node",
+    "importHelpers": true,
+    "target": "es2015",
+    "module": "es2020",
+    "typeRoots": [
+      "node_modules/@types"
+    ],
+    "paths": {
+      "tslib" : ["path/to/node_modules/tslib/tslib.d.ts"]
+    },
+    "lib": [
+      "es2018",
+      "dom"
+    ],
+    "skipLibCheck": true
+  },
+  "angularCompilerOptions": {
+    "fullTemplateTypeCheck": true,
+
+  }
+}
+
