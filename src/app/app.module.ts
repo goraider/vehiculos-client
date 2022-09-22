@@ -30,6 +30,8 @@ import { ForbiddenComponent } from './forbidden/forbidden.component';
 
 import { ProfileModule } from './profile/profile.module';
 
+import { VehiculosModule } from './vehiculos/vehiculos.module';
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -49,6 +51,7 @@ import { ProfileModule } from './profile/profile.module';
     AppsListModule,
     UsersModule,
     ProfileModule,
+    VehiculosModule,
     AppRoutingModule,
     WildcardRoutingModule,
   ],

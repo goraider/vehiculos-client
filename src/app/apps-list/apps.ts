@@ -11,7 +11,7 @@ export class App {
 
 export const APPS:App [] = [
     { name:"Usuarios",      route: "usuarios",          icon: "assets/icons/users.svg",              permission:"" },
-    { name:"Vehículos",      route: "vehiculos",          icon: "assets/icons/car.svg",              permission:"" },
+    { name:"Vehículos",     route: "vehiculos",          icon: "assets/icons/car.svg",              permission:"" },
     
     { name:'Herramientas Dev', route: "dev-tools",  icon: "assets/icons/toolbox.svg", isHub:true, hideHome:true, 
       children:[
