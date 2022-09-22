@@ -9,7 +9,7 @@ import { map } from 'rxjs/operators';
 })
 export class UsersService {
 
-  url = `${environment.base_url}signin/lista-usuario`;
+  url = `${environment.base_url}signin/lista-usuarios`;
   url_role = `${environment.base_url}/role`;
   url_catalogs = `${environment.base_url}/user-catalogs`;
   url_permission = `${environment.base_url}/permission`;

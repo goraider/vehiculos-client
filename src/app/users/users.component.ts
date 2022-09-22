@@ -58,9 +58,9 @@ export class UsersComponent implements OnInit {
         } else {
           this.dataSource = [];
           this.resultsLength = 0;
-          if(response.data.total > 0){
-            this.dataSource = response.data.data;
-            this.resultsLength = response.data.total;
+          if(response.total > 0){
+            this.dataSource = response.usuarios;
+            this.resultsLength = response.total;
           }
         }
         this.isLoading = false;
