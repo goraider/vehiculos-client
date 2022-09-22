@@ -11,9 +11,7 @@ export class App {
 
 export const APPS:App [] = [
     { name:"Usuarios",      route: "usuarios",          icon: "assets/icons/users.svg",              permission:"" },
-    { name:"Proyectos",     route: "proyectos",         icon: "assets/icons/concentrados.svg",       permission:"BG4ZAI7BqpSs7Z0EsbqQkU3JZtGCkRrO" },
-    { name:'Permisos',      route: "permisos",          icon: "assets/icons/security-shield.svg",    permission:"RGMUpFAiRuv7UFoJroHP6CtvmpoFlQXl" },
-    { name:'Roles',         route: "roles",             icon: "assets/icons/users-roles.svg",        permission:"nrPqEhq2TX0mI7qT7glaOCJ7Iqx2QtPs" },
+    { name:"Vehículos",      route: "vehiculos",          icon: "assets/icons/car.svg",              permission:"" },
     
     { name:'Herramientas Dev', route: "dev-tools",  icon: "assets/icons/toolbox.svg", isHub:true, hideHome:true, 
       children:[

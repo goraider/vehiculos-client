@@ -23,7 +23,7 @@ export class UsersComponent implements OnInit {
   resultsLength: number = 0;
   currentPage: number = 0;
 
-  displayedColumns: string[] = ['id','username','name','email','opciones'];
+  displayedColumns: string[] = ['id','username','email','opciones'];
   dataSource: any = [];
   
   constructor(private sharedService: SharedService, private usersService: UsersService, public dialog: MatDialog) { }
