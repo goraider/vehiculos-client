@@ -1,16 +1,16 @@
-.servicios-container {
+.vehiculos-container {
     position: relative;
     min-height: 200px;
 }
 
-.servicios-table-container {
+.vehiculos-table-container {
     position: relative;
     max-height: 400px;
     min-height: 200px;
     overflow: auto;
 }
 
-.servicios-loading-shade {
+.vehiculos-loading-shade {
     position: absolute;
     top: 0;
     left: 0;

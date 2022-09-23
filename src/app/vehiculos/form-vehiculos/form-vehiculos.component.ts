@@ -2,13 +2,11 @@ import { Component, Inject, OnInit } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { FormGroup, Validators, FormBuilder } from '@angular/forms';
 import { startWith, map } from 'rxjs/operators';
+import { Router, ActivatedRoute } from '@angular/router';
 
 import { VehiculosService } from '../vehiculos.service';
 import { AuthService } from '../../auth/auth.service';
-
-export interface FormDialogData {
-  id: number;
-}
+import { User } from '../../auth/models/user';
 
 @Component({
   selector: 'form-vehiculos',
@@ -20,17 +18,19 @@ export class FormVehiculoComponent implements OnInit {
   constructor(
     private vehiculosService: VehiculosService,
     private authService: AuthService,
-    public dialogRef: MatDialogRef<FormVehiculoComponent>,
     private fb: FormBuilder,
-    @Inject(MAT_DIALOG_DATA) public data: FormDialogData
+    private route: ActivatedRoute,
+    public router: Router,
+
   ) {}
 
   isLoading:boolean = false;
   vehiculo:any = {};
 
-  //authUser: User;
+  authUser: User;
 
   provideID:boolean = false;
+  VehiculoID:any;
   
   vehiculoForm = this.fb.group({
 
@@ -49,26 +49,32 @@ export class FormVehiculoComponent implements OnInit {
 
   ngOnInit() {
 
-    //this.authClues = this.authService.getCluesData();
+    this.route.params.subscribe(params => {
+      this.VehiculoID = params?.id;
+      let id = this.VehiculoID;
+      if(this.VehiculoID){
+        this.isLoading = true;
+        this.vehiculosService.getVehiculo(id).subscribe(
+          response => {
+            this.vehiculo = response.vehiculo;
+            this.vehiculoForm.patchValue(this.vehiculo);
+            this.IniciarCatalogos(this.vehiculo)
+            this.isLoading = false;
+          },
+          errorResponse => {
+            console.log(errorResponse);
+            this.isLoading = false;
+          });
+      }
 
-    //this.servicioForm.get('clues_id').patchValue(this.authClues.id);
+    });
 
-    //console.log(this.authClues.id);
+    this.authUser = this.authService.getUserData();
+    this.vehiculoForm.get('user').patchValue(this.authUser.id);
 
-    let id = this.data.id;
-    if(id){
-      this.isLoading = true;
-      this.vehiculosService.getServicio(id).subscribe(
-        response => {
-          this.vehiculo = response;
-          this.vehiculoForm.patchValue(this.vehiculo);
-          this.isLoading = false;
-        },
-        errorResponse => {
-          console.log(errorResponse);
-          this.isLoading = false;
-        });
-    }
+    console.log(this.authUser.id);
+
+
     this.IniciarCatalogos(null);
   }
 
@@ -84,16 +90,17 @@ export class FormVehiculoComponent implements OnInit {
     this.vehiculosService.getCatalogs(carga_catalogos).subscribe(
       response => {
 
-        this.catalogos = response;
+        this.catalogos = response.data;
 
         console.log(this.catalogos);
-        this.filteredCatalogs['marcas']     = this.vehiculoForm.get('marca').valueChanges.pipe(startWith(''),map(value => this._filter(value,'marca','nombre')));
-        this.filteredCatalogs['colores']    = this.vehiculoForm.get('color').valueChanges.pipe(startWith(''),map(value => this._filter(value,'color','nombre')));
+        this.filteredCatalogs['marcas']     = this.vehiculoForm.get('marca').valueChanges.pipe(startWith(''),map(value => this._filter(value,'marcas','nombre')));
+        this.filteredCatalogs['colores']    = this.vehiculoForm.get('color').valueChanges.pipe(startWith(''),map(value => this._filter(value,'colores','nombre')));
 
-        // if(obj){
-        //     this.vehiculoForm.get('unidad_medica_asignada').setValue(obj);
-        //     this.vehiculoForm.get('nivel_usuario').setValue(obj);
-        // }
+        if(obj){
+            this.vehiculoForm.get('marca').setValue(obj.marca);
+            this.vehiculoForm.get('color').setValue(obj.color);
+            this.vehiculoForm.get('user').setValue(obj.user);
+        }
         this.isLoading = false; 
 
       } 
@@ -123,12 +130,24 @@ export class FormVehiculoComponent implements OnInit {
     return value ? value[valueLabel] : value;
   }
 
-  saveServicio(){
+  saveVehiculo(){
+
+    let formData =  JSON.parse(JSON.stringify(this.vehiculoForm.value));
+
+    if(formData.marca){
+      formData.marca = formData.marca.id;
+    }
+
+    if(formData.color){
+      formData.color = formData.color.id;
+    }
+
     this.isLoading = true;
     if(this.vehiculo.id){
-      this.vehiculosService.updateServicio(this.vehiculo.id,this.vehiculoForm.value).subscribe(
+      this.vehiculosService.updateVehiculo(this.vehiculo.id,formData).subscribe(
         response =>{
-          this.dialogRef.close(true);
+          console.log("Respuesta", response);
+          this.router.navigate(['/vehiculos']);
           this.isLoading = false;
         },
         errorResponse => {
@@ -136,9 +155,8 @@ export class FormVehiculoComponent implements OnInit {
           this.isLoading = false;
       });
     }else{
-      this.vehiculosService.createServicio(this.vehiculoForm.value).subscribe(
+      this.vehiculosService.createVehiculo(formData).subscribe(
         response =>{
-          this.dialogRef.close(true);
           console.log(response);
           this.isLoading = false;
       },
@@ -148,11 +166,5 @@ export class FormVehiculoComponent implements OnInit {
       });
     }
   }
-
-  onNoClick(): void {
-    this.dialogRef.close();
-  }
-
-
 
 }

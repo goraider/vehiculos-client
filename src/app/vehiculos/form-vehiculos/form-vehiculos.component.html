@@ -1,87 +1,103 @@
-<h1 mat-dialog-title><mat-icon>time_to_leave</mat-icon>&nbsp;<span *ngIf="vehiculo.id">Editar</span> <span *ngIf="!vehiculo.id">Crear</span> Vehiculo</h1>
-<div mat-dialog-content>
-    <div class="form-container" [formGroup]="vehiculoForm">
-        <div class="form-loading-shade" *ngIf="isLoading"><mat-spinner *ngIf="isLoading"></mat-spinner></div>
 
-        <div class="form-loading-shade" *ngIf="!isLoading && !vehiculo">No se encontraron los datos del vehiculo</div>
-        <br>
+<section fxLayout="column" fxLayoutGap="10px" fxLayoutAlign="start" style="padding:10px; height: 80%; overflow: auto; flex: 1 1 0%;">
+    <section fxFlex fxLayout="row" fxLayoutAlign="center">
+        <mat-card fxFlex.xs="80%" fxFlex="90%">
+            <mat-card-header>
+                <mat-card-title>
+                    <mat-icon>time_to_leave</mat-icon>&nbsp;<span *ngIf="vehiculo.id">Actualizar</span> <span *ngIf="!vehiculo.id">Crear</span> Vehículo
+                </mat-card-title>
+                <mat-card-subtitle>{{ (VehiculoID != null || "") ? "ID: "+VehiculoID : "" }}</mat-card-subtitle>
+            </mat-card-header>
 
-        <div fxLayout.gt-sm="row" fxLayout="column" fxLayoutGap.gt-sm="10px">
+            <mat-card-content>
+                <div class="edit-container" [formGroup]="vehiculoForm">
+                    <div class="edit-loading-shade" *ngIf="isLoading">
+                        <mat-spinner *ngIf="isLoading"></mat-spinner>
+                    </div>
 
-            <mat-form-field appearance="fill" fxFlex>
-                <mat-label>Marca:</mat-label>
-                <input type="text" aria-label="nivel_usuario" matInput formControlName="marca" [matAutocomplete]="marcaAutocomplete">
-                <mat-autocomplete #marcaAutocomplete="matAutocomplete" [displayWith]="getDisplayFn('nombre')">
-                    <mat-option *ngFor="let item of filteredCatalogs['marcas'] | async" [value]="item">
-                        {{ item.nombre }}
-                    </mat-option>
-                </mat-autocomplete>
-                <mat-hint *ngIf="!vehiculoForm.get('marca').value">Selecciona una Marca de la lista</mat-hint>
-                <mat-error *ngIf="vehiculoForm.get('marca').hasError('required')">Este campo es obligatorio</mat-error>
-            </mat-form-field>
+                    <div class="form-loading-shade" *ngIf="!isLoading && !vehiculo">No se encontraron los datos del vehiculo</div>
+                    <br>
+            
+                    <div fxLayout.gt-sm="row" fxLayout="column" fxLayoutGap.gt-sm="10px">
+            
+                        <mat-form-field appearance="fill" fxFlex>
+                            <mat-label>Fecha de Ingreso: </mat-label>
+                            <input matInput [matDatepicker]="fecha_ingreso" formControlName="fecha_ingreso" placeholder="Fecha de Ingreso" readonly>
+                            <mat-datepicker-toggle matSuffix [for]="fecha_ingreso"></mat-datepicker-toggle>
+                            <mat-datepicker #fecha_ingreso></mat-datepicker>
+                        </mat-form-field>
+            
+                        <mat-form-field appearance="fill" fxFlex *ngIf="catalogos['marcas']">
+                            <mat-label>Marca:</mat-label>
+                            <input autofocus type="text" aria-label="marca" matInput formControlName="marca" [matAutocomplete]="marcaAutocomplete">
+                            <mat-autocomplete #marcaAutocomplete="matAutocomplete" [displayWith]="getDisplayFn('nombre')">
+                                <mat-option *ngFor="let item of filteredCatalogs['marcas'] | async" [value]="item">
+                                    {{ item.nombre }}
+                                </mat-option>
+                            </mat-autocomplete>
+                            <mat-hint *ngIf="!vehiculoForm.get('marca').value">Selecciona una Marca de la lista</mat-hint>
+                            <mat-error *ngIf="vehiculoForm.get('marca').hasError('required')">Este campo es obligatorio</mat-error>
+                        </mat-form-field>
+            
+                    </div>
+            
+                    <div fxLayout.gt-sm="row" fxLayout="column" fxLayoutGap.gt-sm="10px">
+            
+                        <mat-form-field appearance="fill" fxFlex *ngIf="catalogos['colores']">
+                            <mat-label>Color:</mat-label>
+                            <input type="text" aria-label="colores" matInput formControlName="color" [matAutocomplete]="marcaAutocomplete">
+                            <mat-autocomplete #marcaAutocomplete="matAutocomplete" [displayWith]="getDisplayFn('nombre')">
+                                <mat-option *ngFor="let item of filteredCatalogs['colores'] | async" [value]="item">
+                                    {{ item.nombre }}
+                                </mat-option>
+                            </mat-autocomplete>
+                            <mat-hint *ngIf="!vehiculoForm.get('color').value">Selecciona un Color de la lista</mat-hint>
+                            <mat-error *ngIf="vehiculoForm.get('color').hasError('required')">Este campo es obligatorio</mat-error>
+                        </mat-form-field>
+            
+                        <mat-form-field appearance="fill" fxFlex>
+                            <input matInput id="modelo" formControlName="modelo" placeholder="Modelo" >
+                            <mat-error *ngIf="vehiculoForm.get('modelo').invalid && (vehiculoForm.get('modelo').dirty || vehiculoForm.get('modelo').touched)">
+                                <span *ngIf="vehiculoForm.get('modelo').errors.required">El Modelo es obligatorio</span>
+                            </mat-error>
+                        </mat-form-field>
+            
+            
+                    </div>
+            
+                    <div fxLayout.gt-sm="row" fxLayout="column" fxLayoutGap.gt-sm="10px">
+            
+                            
+                        <mat-form-field appearance="fill" fxFlex>
+                            <mat-select id="estado" formControlName="estado" placeholder="¿Cuál es el Estado del Vehículo?" required>
+                                <mat-option [value]="true">Activo</mat-option>
+                                <mat-option [value]="false">Inactivo</mat-option>
+                            </mat-select>
+                            <mat-error *ngIf="vehiculoForm.get('estado').invalid && (vehiculoForm.get('estado').dirty || vehiculoForm.get('estado').touched)">
+                                <span *ngIf="vehiculoForm.get('estado').errors.required">Elige el Estado</span>
+                            </mat-error>
+                        </mat-form-field>
+            
+                    </div>
+                    <br>
+                    <div fxLayout.gt-sm="row" fxLayout="column" fxLayoutGap.gt-sm="10px">
+            
+                        <mat-radio-group  fxLayout="row" fxLayoutAlign="center center" fxLayoutGap="5px" fxLayout.xs ="row" fxLayout.sm ="row" formControlName="asignado" aria-label="Select an option">
+                            <label><strong>¿Esta Asignado?</strong></label>
+                            <mat-radio-button class="form-radio-button" [value]="true">Si</mat-radio-button>
+                            <mat-radio-button class="form-radio-button" [value]="false">No</mat-radio-button>
+                        </mat-radio-group>
+            
+                    </div>
 
-            <mat-form-field appearance="fill" fxFlex>
-                <input matInput id="modelo" formControlName="modelo" placeholder="Modelo" required>
-                <mat-error *ngIf="vehiculoForm.get('modelo').invalid && (vehiculoForm.get('modelo').dirty || vehiculoForm.get('modelo').touched)">
-                    <span *ngIf="vehiculoForm.get('modelo').errors.required">El Modelo es obligatorio</span>
-                </mat-error>
-            </mat-form-field>
-
-        </div>
-
-        <div fxLayout.gt-sm="row" fxLayout="column" fxLayoutGap.gt-sm="10px">
-
-            <mat-form-field appearance="fill" fxFlex>
-                <mat-label>Color:</mat-label>
-                <input type="text" aria-label="colores" matInput formControlName="color" [matAutocomplete]="marcaAutocomplete">
-                <mat-autocomplete #marcaAutocomplete="matAutocomplete" [displayWith]="getDisplayFn('nombre')">
-                    <mat-option *ngFor="let item of filteredCatalogs['colores'] | async" [value]="item">
-                        {{ item.nombre }}
-                    </mat-option>
-                </mat-autocomplete>
-                <mat-hint *ngIf="!vehiculoForm.get('color').value">Selecciona un Color de la lista</mat-hint>
-                <mat-error *ngIf="vehiculoForm.get('color').hasError('required')">Este campo es obligatorio</mat-error>
-            </mat-form-field>
-
-            <mat-form-field appearance="fill" fxFlex>
-                <mat-label>Fecha de Ingreso: </mat-label>
-                <input matInput [matDatepicker]="fecha_ingreso" formControlName="fecha_ingreso" placeholder="Fecha de Ingreso" readonly>
-                <mat-datepicker-toggle matSuffix [for]="fecha_ingreso"></mat-datepicker-toggle>
-                <mat-datepicker #fecha_ingreso></mat-datepicker>
-            </mat-form-field>
-
-        </div>
-
-        <div fxLayout.gt-sm="row" fxLayout="column" fxLayoutGap.gt-sm="10px">
-
-                
-            <mat-form-field appearance="fill" fxFlex>
-                <mat-select id="estado" formControlName="estado" placeholder="¿Cuál es el Estado del Vehículo?" required>
-                    <mat-option [value]="true">Activo</mat-option>
-                    <mat-option [value]="false">Inactivo</mat-option>
-                </mat-select>
-                <mat-error *ngIf="vehiculoForm.get('estado').invalid && (vehiculoForm.get('estado').dirty || vehiculoForm.get('estado').touched)">
-                    <span *ngIf="vehiculoForm.get('estado').errors.required">Elige el Estado</span>
-                </mat-error>
-            </mat-form-field>
-
-        </div>
-        <br>
-        <div fxLayout.gt-sm="row" fxLayout="column" fxLayoutGap.gt-sm="10px">
-
-            <mat-radio-group  fxLayout="row" fxLayoutAlign="center center" fxLayoutGap="5px" fxLayout.xs ="row" fxLayout.sm ="row" formControlName="asignado" aria-label="Select an option">
-                <label><strong>¿Esta Asignado?</strong></label>
-                <mat-radio-button class="form-radio-button" [value]="true">Si</mat-radio-button>
-                <mat-radio-button class="form-radio-button" [value]="false">No</mat-radio-button>
-            </mat-radio-group>
-
-        </div>
-
-    </div>
-</div>
-<mat-divider></mat-divider>
-<div mat-dialog-actions>
-    <span fxFlex></span>
-    <button mat-button (click)='onNoClick()'>Cancelar</button>
-    <button mat-raised-button (click)="saveServicio()" color="primary" [disabled]="vehiculoForm.invalid || isLoading"><mat-icon>save</mat-icon> Guardar</button>
-</div>
+                    
+                </div>
+            </mat-card-content>
+            <mat-card-actions>
+                <span fxFlex></span>
+                <button mat-raised-button routerLink="/vehiculos">Cancelar</button>
+                <button mat-raised-button (click)="saveVehiculo()" color="primary" [disabled]="!vehiculoForm.valid || isLoading"><mat-icon>save</mat-icon> Guardar</button>
+            </mat-card-actions>
+        </mat-card>
+    </section>
+</section>

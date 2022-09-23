@@ -25,7 +25,9 @@
   },
   "angularCompilerOptions": {
     "fullTemplateTypeCheck": true,
-
-  }
+  },  
+  "eslint.workingDirectories": [
+    "sub-directory-where-tsconfig-files-are"
+  ]
 }
 

@@ -18,7 +18,7 @@ import { map } from 'rxjs/operators';
 })
 export class ListVehiculosComponent implements OnInit {
 
-  authClues: User;
+  authUser: User;
   isLoading: boolean = false;
   searchQuery: string = '';
   mediaSize: any;
@@ -27,7 +27,7 @@ export class ListVehiculosComponent implements OnInit {
   resultsLength: number = 0;
   currentPage: number = 0;
 
-  displayedColumns: string[] = ['id','nombre', 'es_ambulatorio', 'opciones'];
+  displayedColumns: string[] = ['marca', 'modelo', 'color', 'fecha_ingreso', 'estado', 'asignado', 'opciones'];
   dataSource: any = [];
 
   constructor(
@@ -42,50 +42,36 @@ export class ListVehiculosComponent implements OnInit {
   @ViewChild(MatTable,{static:false}) serviciosTable: MatTable<any>;
 
   ngOnInit() {
-
-    const zises = new Map([
-      ['xs', 1]
-    ]);
-
-    this.mediaObserver.asObservable().pipe(
-     map((change: MediaChange[]) => {
-        console.log(change[0]);
-        this.mediaSize = zises.get(change[0].mqAlias);
-     })
-    );
   
-
-
-    this.authClues = this.authService.getUserData();
-    console.log(this.authClues);
-    this.loadServiciosData(null);
+    this.authUser = this.authService.getUserData();
+    this.loadVehiculosData(null);
   }
 
-  public loadServiciosData(event?:PageEvent){
+  public loadVehiculosData(event?:PageEvent){
+
     this.isLoading = true;
     let params:any;
     if(!event){
-      params = { page: 1, per_page: 20, clues: this.authClues ? this.authClues.id : '' }
+      params = { page: 1, per_page: 20}
     }else{
       params = {
         page: event.pageIndex+1,
         per_page: event.pageSize,
-        clues: this.authClues ? this.authClues.id : '' 
       };
     }
 
     params.query = this.searchQuery;
     params.show_hidden = true;
 
-    this.vehiculosService.getServicioList(params).subscribe(
+    this.vehiculosService.getVehiculosList(params).subscribe(
       response =>{
         if(response.error) {
           let errorMessage = response.error.message;
           this.sharedService.showSnackBar(errorMessage, null, 3000);
         } else {
-          if(response.catalogo_servicios.total > 0){
-            this.dataSource = response.catalogo_servicios.data;
-            this.resultsLength = response.catalogo_servicios.total;
+          if(response.total > 0){
+            this.dataSource = response.vehiculos;
+            this.resultsLength = response.total;
           }else{
             this.dataSource = [];
             this.resultsLength = 0;
@@ -107,54 +93,21 @@ export class ListVehiculosComponent implements OnInit {
 
   applyFilter(){
     this.paginator.pageIndex = 0;
-    this.loadServiciosData(null);
+    this.loadVehiculosData(null);
   }
 
-  openDialogForm(id:number = 0){
-
-    let configDialog = {};
-
-    if(this.mediaSize == 'xs'){
-      configDialog = {
-        maxWidth: '100vw',
-        maxHeight: '100vh',
-        height: '100%',
-        width: '100%',
-        data:{id: id, scSize:this.mediaSize}
-      };
-    }else{
-      configDialog = {
-        width: '99%',
-        maxHeight: '90vh',
-        height: '500px',
-        data:{id: id}
-      }
-    }
-
-    const dialogRef = this.dialog.open(FormVehiculoComponent, configDialog);
-
-    dialogRef.afterClosed().subscribe(valid => {
-      if(valid){
-        console.log('Aceptar');
-      }else{
-        console.log('Cancelar');
-      }
-    });
-
-  }
-
-  confirmDeleteServicio(id:number = 0){
+  confirmDeleteVehiculo(id:number = 0){
     const dialogRef = this.dialog.open(ConfirmActionDialogComponent, {
       width: '500px',
-      data: {dialogTitle:'Eliminar Servicio',dialogMessage:'Esta seguro de eliminar este Servicio?',btnColor:'warn',btnText:'Eliminar'}
+      data: {dialogTitle:'Eliminar Vehículo',dialogMessage:'¿Está seguro de eliminar el Vehículo?',btnColor:'warn',btnText:'Eliminar'}
     });
 
     dialogRef.afterClosed().subscribe(reponse => {
       if(reponse){
-        this.vehiculosService.deleteServicio(id).subscribe(
+        this.vehiculosService.deleteVehiculo(id).subscribe(
           response => {
             console.log(response);
-            this.loadServiciosData(null);
+            this.loadVehiculosData(null);
           }
         );
       }

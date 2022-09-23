@@ -2,7 +2,7 @@
 <section>
     <div  fxFill>
         <section fxLayout fxLayoutAlign="center">
-            <div class="servicios-loading-shade" *ngIf="isLoading"><mat-spinner></mat-spinner></div>
+            <div class="vehiculos-loading-shade" *ngIf="isLoading"><mat-spinner></mat-spinner></div>
 
             <mat-card fxFlex.xs="100%" fxFlex="90%">
                 <div fxLayout="row">
@@ -19,62 +19,58 @@
                 
                 <div fxLayout="row" style="padding-bottom:10px;">
                     <div fxFlex></div>
-                    <button mat-raised-button color="primary" (click)="openDialogForm()"><mat-icon>add_circle</mat-icon> Agregar vehiculo</button>
+                    <button mat-raised-button color="primary" routerLink="/vehiculos/nuevo"><mat-icon>add_circle</mat-icon> Crear Vehículo</button>
                 </div>
 
                 <mat-divider [inset]="true"></mat-divider>
 
-                <!-- <div class="data-container">
-                    <div class="data-table-container">
-                        <table mat-table [dataSource]="dataSource" class="servicios-table" multiTemplateDataRows matSort>
-
-                        </table>
-
-                    </div>
-                </div> -->
-
-                <div class="servicios-container">
-                    <div class="servicios-table-container">
-                        <table mat-table [dataSource]="dataSource" class="servicios-table" multiTemplateDataRows matSort>
-                            <!-- ID Column -->
-                            <ng-container matColumnDef="id">
-                                <th mat-header-cell *matHeaderCellDef mat-sort-header fxHide.xs="xs"> ID </th>
-                                <td mat-cell *matCellDef="let row" fxHide.xs="xs"> {{row.id}} </td>
+                <div class="vehiculos-container">
+                    <div class="vehiculos-table-container">
+                        <table mat-table [dataSource]="dataSource" class="vehiculos-table" multiTemplateDataRows matSort>
+                            <!-- Marca Column -->
+                            <ng-container matColumnDef="marca">
+                                <th mat-header-cell *matHeaderCellDef mat-sort-header fxHide.xs="xs"> Marca </th>
+                                <td mat-cell *matCellDef="let row" fxHide.xs="xs"> {{row.marca?.nombre}} </td>
                             </ng-container>
                     
-                            <!-- Nombre Column -->
-                            <ng-container matColumnDef="nombre">
-                                <th mat-header-cell *matHeaderCellDef mat-sort-header> Nombre </th>
-                                <td mat-cell *matCellDef="let row"> {{row.nombre}} </td>
+                            <!-- Modelo Column -->
+                            <ng-container matColumnDef="modelo">
+                                <th mat-header-cell *matHeaderCellDef mat-sort-header> Modelo </th>
+                                <td mat-cell *matCellDef="let row"> {{row.modelo}} </td>
                             </ng-container>
 
-                            <!-- ¿Es Ambulatorio? Column -->
-                            <ng-container matColumnDef="es_ambulatorio">
-                                <th mat-header-cell *matHeaderCellDef mat-sort-header> ¿Es Ambulatorio el Servicio? </th>
-                                <td mat-cell *matCellDef="let row"> {{(row.es_ambulatorio == 1)?'Si':'No'}} </td>
+                            <!-- Color Column -->
+                            <ng-container matColumnDef="color">
+                                <th mat-header-cell *matHeaderCellDef mat-sort-header> Color </th>
+                                <td mat-cell *matCellDef="let row"> {{row.color?.nombre}} </td>
                             </ng-container>
 
-                            <ng-container matColumnDef="actions">
-                                <th mat-header-cell *matHeaderCellDef >Acciones</th>
-                                <td mat-cell *matCellDef="let row">
-                                    <button mat-stroked-button color="primary" matTooltip="Editar Servicio" (click)="openDialogForm(row.id)"><mat-icon>edit</mat-icon></button> &nbsp;
-                                    <button mat-icon-button color="warn" (click)="confirmDeleteServicio(row.id)"><mat-icon>delete</mat-icon></button>
-                                </td>
+                            <!-- Fecha de Ingreso Column -->
+                            <ng-container matColumnDef="fecha_ingreso">
+                                <th mat-header-cell *matHeaderCellDef mat-sort-header> Fecha de Ingreso </th>
+                                <td mat-cell *matCellDef="let row"> {{row.fecha_ingreso | date: 'dd/MM/yyyy'}} </td>
+                            </ng-container>
+
+                            <!-- Estado Column -->
+                            <ng-container matColumnDef="estado">
+                                <th mat-header-cell *matHeaderCellDef mat-sort-header> ¿Esta Activo? </th>
+                                <td mat-cell *matCellDef="let row"> {{(row.estado === true)?'Si':'No'}} </td>
+                            </ng-container>
+
+                            <!-- Asignado Column -->
+                            <ng-container matColumnDef="asignado">
+                                <th mat-header-cell *matHeaderCellDef mat-sort-header> ¿Esta Asignado? </th>
+                                <td mat-cell *matCellDef="let row"> {{(row.asignado === true)?'Si':'No'}} </td>
                             </ng-container>
 
                             <ng-container matColumnDef="opciones" >
                                 <th mat-header-cell *matHeaderCellDef>Opciones</th>
                                 <td mat-cell *matCellDef="let row; let i = index">
-                                    <!--<button mat-stroked-button color="primary" matTooltip="Editar Trabajador" (click)="editTrabajador(i)" routerLink="/trabajadores/editar/{{row.id}}"><mat-icon>edit</mat-icon></button>&nbsp;-->
                                     <button mat-button mat-stroked-button [matMenuTriggerFor]="menu">Opciones</button>
                                     <mat-menu #menu="matMenu">
 
-                                        <button mat-menu-item matTooltip="Editar Servicio" (click)="openDialogForm(row.id)"><mat-icon color="primary">edit</mat-icon>Editar</button>
-                                        <button mat-menu-item matTooltip="Eliminar Servicio" (click)="confirmDeleteServicio(row.id)"><mat-icon color="warn">delete</mat-icon>Eliminar</button>
-                                        <!--
-                                            <button mat-menu-item #lista *ngIf="row.estatus == 1" fxHide.xs="true"  [ifHasPermission]="'6Jf8zRlZbdY3jTDVJNLKXkKL8NjuGOyo'" (click)="liberarTrabajador(row.id)"><mat-icon color="warn">link_off</mat-icon>Desligar</button>
-                                            <button mat-menu-item *ngIf="row.estatus == 1" fxHide.xs="true" [ifHasPermission]="'6Jf8zRlZbdY3jTDVJNLKXkKL8NjuGOyo'" (click)="BajaTrabajador(row)"><mat-icon color="warn">person_remove</mat-icon>Dar de Baja</button>
-                                        -->
+                                        <button mat-menu-item matTooltip="Editar Vehículo" routerLink="/vehiculos/editar/{{row.id}}"><mat-icon color="primary">edit</mat-icon>Editar</button>
+                                        <button mat-menu-item matTooltip="Eliminar Vehículo" (click)="confirmDeleteVehiculo(row.id)"><mat-icon color="warn">delete</mat-icon>Eliminar</button>
                                     </mat-menu>
                                     
                                 </td>
@@ -93,7 +89,7 @@
                             <tr mat-footer-row *matFooterRowDef="['noResultsFound']" class="no-results-found" [ngClass]="{'hide':!(dataSource!=null && dataSource.length==0)}"></tr>
                         </table>
                     </div>
-                    <mat-paginator #paginator pageSize="20" [pageIndex]="currentPage" [length]="resultsLength" [pageSizeOptions]="[5, 10, 20, 50]" showFirstLastButtons (page)="pageEvent = loadServiciosData($event)"></mat-paginator>
+                    <mat-paginator #paginator pageSize="20" [pageIndex]="currentPage" [length]="resultsLength" [pageSizeOptions]="[5, 10, 20, 50]" showFirstLastButtons (page)="pageEvent = loadVehiculosData($event)"></mat-paginator>
                 </div>
             </mat-card>
         </section>
