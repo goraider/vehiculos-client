@@ -77,8 +77,8 @@ export class FormVehiculoComponent implements OnInit {
     this.isLoading = true;    
     
     let carga_catalogos = [
-      {nombre:'Marca', },
-      {nombre:'Color',},
+      {nombre:"marcas"},
+      {nombre:"colores"},
     ];
 
     this.vehiculosService.getCatalogs(carga_catalogos).subscribe(
