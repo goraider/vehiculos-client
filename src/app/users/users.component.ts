@@ -61,6 +61,7 @@ export class UsersComponent implements OnInit {
           if(response.total > 0){
             this.dataSource = response.usuarios;
             this.resultsLength = response.total;
+            this.sharedService.showSnackBar(response?.msg, 'Cerrar', 5000);
           }
         }
         this.isLoading = false;
@@ -92,7 +93,7 @@ export class UsersComponent implements OnInit {
       if(valid){
         this.usersService.deleteUser(id).subscribe(
           response =>{
-            console.log(response);
+            this.sharedService.showSnackBar(response?.msg, 'Cerrar', 5000);
             this.loadUsersData(this.pageEvent);
           }
         );

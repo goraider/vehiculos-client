@@ -72,6 +72,7 @@ export class ListVehiculosComponent implements OnInit {
           if(response.total > 0){
             this.dataSource = response.vehiculos;
             this.resultsLength = response.total;
+            this.sharedService.showSnackBar(response?.msg, 'Cerrar', 5000);
           }else{
             this.dataSource = [];
             this.resultsLength = 0;
@@ -106,7 +107,7 @@ export class ListVehiculosComponent implements OnInit {
       if(reponse){
         this.vehiculosService.deleteVehiculo(id).subscribe(
           response => {
-            console.log(response);
+            this.sharedService.showSnackBar(response?.msg, 'Cerrar', 5000);
             this.loadVehiculosData(null);
           }
         );

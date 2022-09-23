@@ -17,19 +17,12 @@
 
                     <div class="form-loading-shade" *ngIf="!isLoading && !vehiculo">No se encontraron los datos del vehiculo</div>
                     <br>
-            
+                    <!-- autofocus -->
                     <div fxLayout.gt-sm="row" fxLayout="column" fxLayoutGap.gt-sm="10px">
-            
-                        <mat-form-field appearance="fill" fxFlex>
-                            <mat-label>Fecha de Ingreso: </mat-label>
-                            <input matInput [matDatepicker]="fecha_ingreso" formControlName="fecha_ingreso" placeholder="Fecha de Ingreso" readonly>
-                            <mat-datepicker-toggle matSuffix [for]="fecha_ingreso"></mat-datepicker-toggle>
-                            <mat-datepicker #fecha_ingreso></mat-datepicker>
-                        </mat-form-field>
-            
+                        
                         <mat-form-field appearance="fill" fxFlex *ngIf="catalogos['marcas']">
                             <mat-label>Marca:</mat-label>
-                            <input autofocus type="text" aria-label="marca" matInput formControlName="marca" [matAutocomplete]="marcaAutocomplete">
+                            <input type="text" aria-label="marca" matInput formControlName="marca" [matAutocomplete]="marcaAutocomplete">
                             <mat-autocomplete #marcaAutocomplete="matAutocomplete" [displayWith]="getDisplayFn('nombre')">
                                 <mat-option *ngFor="let item of filteredCatalogs['marcas'] | async" [value]="item">
                                     {{ item.nombre }}
@@ -38,11 +31,14 @@
                             <mat-hint *ngIf="!vehiculoForm.get('marca').value">Selecciona una Marca de la lista</mat-hint>
                             <mat-error *ngIf="vehiculoForm.get('marca').hasError('required')">Este campo es obligatorio</mat-error>
                         </mat-form-field>
-            
-                    </div>
-            
-                    <div fxLayout.gt-sm="row" fxLayout="column" fxLayoutGap.gt-sm="10px">
-            
+
+                        <mat-form-field appearance="fill" fxFlex>
+                            <input matInput id="modelo" formControlName="modelo" placeholder="Modelo" >
+                            <mat-error *ngIf="vehiculoForm.get('modelo').invalid && (vehiculoForm.get('modelo').dirty || vehiculoForm.get('modelo').touched)">
+                                <span *ngIf="vehiculoForm.get('modelo').errors.required">El Modelo es obligatorio</span>
+                            </mat-error>
+                        </mat-form-field>
+                        
                         <mat-form-field appearance="fill" fxFlex *ngIf="catalogos['colores']">
                             <mat-label>Color:</mat-label>
                             <input type="text" aria-label="colores" matInput formControlName="color" [matAutocomplete]="marcaAutocomplete">
@@ -54,19 +50,20 @@
                             <mat-hint *ngIf="!vehiculoForm.get('color').value">Selecciona un Color de la lista</mat-hint>
                             <mat-error *ngIf="vehiculoForm.get('color').hasError('required')">Este campo es obligatorio</mat-error>
                         </mat-form-field>
-            
-                        <mat-form-field appearance="fill" fxFlex>
-                            <input matInput id="modelo" formControlName="modelo" placeholder="Modelo" >
-                            <mat-error *ngIf="vehiculoForm.get('modelo').invalid && (vehiculoForm.get('modelo').dirty || vehiculoForm.get('modelo').touched)">
-                                <span *ngIf="vehiculoForm.get('modelo').errors.required">El Modelo es obligatorio</span>
-                            </mat-error>
-                        </mat-form-field>
-            
+
             
                     </div>
-            
                     <div fxLayout.gt-sm="row" fxLayout="column" fxLayoutGap.gt-sm="10px">
-            
+
+                        <mat-form-field appearance="fill" fxFlex>
+                            <mat-label>Fecha de Ingreso: </mat-label>
+                            <input matInput [matDatepicker]="fecha_ingreso" formControlName="fecha_ingreso" placeholder="Fecha de Ingreso" readonly>
+                            <mat-datepicker-toggle matSuffix [for]="fecha_ingreso"></mat-datepicker-toggle>
+                            <mat-datepicker #fecha_ingreso></mat-datepicker>
+                            <mat-error *ngIf="vehiculoForm.get('fecha_ingreso').invalid && (vehiculoForm.get('fecha_ingreso').dirty || vehiculoForm.get('fecha_ingreso').touched)">
+                                <span *ngIf="vehiculoForm.get('fecha_ingreso').errors.required">La Fecha de Ingreso es obligatoria</span>
+                            </mat-error>
+                        </mat-form-field>
                             
                         <mat-form-field appearance="fill" fxFlex>
                             <mat-select id="estado" formControlName="estado" placeholder="¿Cuál es el Estado del Vehículo?" required>

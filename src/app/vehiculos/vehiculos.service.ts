@@ -63,7 +63,7 @@ export class VehiculosService {
   }
 
   deleteVehiculo(id) {
-    return this.http.delete<any>(this.url+'/'+id,{}).pipe(
+    return this.http.delete<any>(this.url+'/eliminar-vehiculo/'+id,{}).pipe(
       map( (response) => {
         return response;
       }
