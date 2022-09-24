@@ -1,14 +1,17 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { SharedService } from '../../shared/shared.service';
+
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
-import { VehiculosService } from '../vehiculos.service';
-import { FormVehiculoComponent } from '../form-vehiculos/form-vehiculos.component';
 import { MatDialog } from '@angular/material/dialog';
+
+import { VehiculosService } from '../vehiculos.service';
 import { AuthService } from '../../auth/auth.service';
 import { User } from '../../auth/models/user';
 import { ConfirmActionDialogComponent } from '../../utils/confirm-action-dialog/confirm-action-dialog.component';
 import { MatTable } from '@angular/material/table';
-import { MediaChange, MediaObserver } from '@angular/flex-layout';
+
+import { MediaObserver } from '@angular/flex-layout';
+import { DatePipe } from '@angular/common';
 import { map } from 'rxjs/operators';
 
 @Component({
@@ -27,6 +30,21 @@ export class ListVehiculosComponent implements OnInit {
   resultsLength: number = 0;
   currentPage: number = 0;
 
+  filtros: any = {
+    marcas:false,
+    modelo:'',
+    colores:false,
+    estado:false,
+    asignado:false,
+    usuario:false,
+    rango_fechas:{inicio:null, fin:null},
+  };
+
+  filtrosCatalogos: any = {
+    marcas:[],
+    colores:[]
+  };
+
   displayedColumns: string[] = ['marca', 'modelo', 'color', 'fecha_ingreso', 'estado', 'asignado', 'opciones'];
   dataSource: any = [];
 
@@ -35,7 +53,8 @@ export class ListVehiculosComponent implements OnInit {
     private authService: AuthService,
     private vehiculosService: VehiculosService,
     public mediaObserver: MediaObserver,
-    public dialog: MatDialog
+    public dialog: MatDialog,
+    private datepipe: DatePipe,
   ) { }
 
   @ViewChild(MatPaginator, {static: false}) paginator: MatPaginator;
@@ -45,6 +64,38 @@ export class ListVehiculosComponent implements OnInit {
   
     this.authUser = this.authService.getUserData();
     this.loadVehiculosData(null);
+    this.catalogFilter();
+  }
+
+  public catalogFilter(){
+
+    this.isLoading = true;    
+    
+    let carga_catalogos = [
+      {nombre:"marcas"},
+      {nombre:"colores"},
+    ];
+
+    this.vehiculosService.getCatalogs(carga_catalogos).subscribe(
+      response => {
+        this.isLoading = true;
+
+        if(response.error) {
+          let errorMessage = response.msg;
+          this.sharedService.showSnackBar(errorMessage, 'Cerrar', 3000);
+        } else {
+
+          console.log(response);
+          this.filtrosCatalogos.marcas = response.data.marcas;
+          this.filtrosCatalogos.colores = response.data.colores;
+        
+        }
+
+        this.isLoading = false; 
+
+      } 
+    );
+
   }
 
   public loadVehiculosData(event?:PageEvent){
@@ -60,8 +111,38 @@ export class ListVehiculosComponent implements OnInit {
       };
     }
 
-    params.query = this.searchQuery;
-    params.show_hidden = true;
+    // params.query = this.searchQuery;
+
+
+    if(this.filtros.marcas){
+      params.marca = this.filtros.marcas;
+    }
+
+    if(this.filtros.modelo){
+      params.modelo = this.filtros.modelo;
+    }
+
+    if(this.filtros.colores){
+      params.color = this.filtros.colores;
+    }
+    if(this.filtros.estado){
+      params.estado = this.filtros.estado;
+    }
+    if(this.filtros.asignado){
+      params.asignado = this.filtros.asignado;
+    }
+    if(this.filtros.usuario){
+      params.usuario = this.filtros.usuario;
+    }
+
+    if(this.filtros.rango_fechas.inicio){
+      params.fecha_inicio = this.datepipe.transform(this.filtros.rango_fechas.inicio, 'yyyy-MM-dd');
+      params.fecha_fin = this.datepipe.transform(this.filtros.rango_fechas.fin, 'yyyy-MM-dd');
+      console.log(params);
+    }
+
+    
+  
 
     this.vehiculosService.getVehiculosList(params).subscribe(
       response =>{
@@ -113,6 +194,34 @@ export class ListVehiculosComponent implements OnInit {
         );
       }
     });
+  }
+
+  limpiarFiltro(){
+    this.filtros.marca = false;
+    this.filtros.modelo = '';
+    this.filtros.color = false;
+    this.filtros.estado = false;
+    this.filtros.asignado = false;
+    this.filtros.usuario = false;
+    this.filtros.rango_fechas = {inicio:null, fin:null};
+
+    this.aplicarFiltro();
+  }
+
+  checarFechasFiltro(){
+    if(this.filtros.rango_fechas.inicio && !this.filtros.rango_fechas.fin){
+      this.filtros.rango_fechas.fin = this.filtros.rango_fechas.inicio;
+    }
+    this.aplicarFiltro();
+  }
+
+  aplicarFiltro(){
+    this.loadVehiculosData();
+    //console.log(this.filtros);
+  }
+
+  cleanSearch(){
+    this.filtros.modelo = '';
   }
 
 }

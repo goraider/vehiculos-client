@@ -20,7 +20,7 @@
                     <!-- autofocus -->
                     <div fxLayout.gt-sm="row" fxLayout="column" fxLayoutGap.gt-sm="10px">
                         
-                        <mat-form-field appearance="fill" fxFlex *ngIf="catalogos['marcas']">
+                        <mat-form-field appearance="outline" fxFlex *ngIf="catalogos['marcas']">
                             <mat-label>Marca:</mat-label>
                             <input type="text" aria-label="marca" matInput formControlName="marca" [matAutocomplete]="marcaAutocomplete">
                             <mat-autocomplete #marcaAutocomplete="matAutocomplete" [displayWith]="getDisplayFn('nombre')">
@@ -32,14 +32,14 @@
                             <mat-error *ngIf="vehiculoForm.get('marca').hasError('required')">Este campo es obligatorio</mat-error>
                         </mat-form-field>
 
-                        <mat-form-field appearance="fill" fxFlex>
+                        <mat-form-field appearance="outline" fxFlex>
                             <input matInput id="modelo" formControlName="modelo" placeholder="Modelo" >
                             <mat-error *ngIf="vehiculoForm.get('modelo').invalid && (vehiculoForm.get('modelo').dirty || vehiculoForm.get('modelo').touched)">
                                 <span *ngIf="vehiculoForm.get('modelo').errors.required">El Modelo es obligatorio</span>
                             </mat-error>
                         </mat-form-field>
                         
-                        <mat-form-field appearance="fill" fxFlex *ngIf="catalogos['colores']">
+                        <mat-form-field appearance="outline" fxFlex *ngIf="catalogos['colores']">
                             <mat-label>Color:</mat-label>
                             <input type="text" aria-label="colores" matInput formControlName="color" [matAutocomplete]="marcaAutocomplete">
                             <mat-autocomplete #marcaAutocomplete="matAutocomplete" [displayWith]="getDisplayFn('nombre')">
@@ -55,7 +55,7 @@
                     </div>
                     <div fxLayout.gt-sm="row" fxLayout="column" fxLayoutGap.gt-sm="10px">
 
-                        <mat-form-field appearance="fill" fxFlex>
+                        <mat-form-field appearance="outline" fxFlex>
                             <mat-label>Fecha de Ingreso: </mat-label>
                             <input matInput [matDatepicker]="fecha_ingreso" formControlName="fecha_ingreso" placeholder="Fecha de Ingreso" readonly>
                             <mat-datepicker-toggle matSuffix [for]="fecha_ingreso"></mat-datepicker-toggle>
@@ -65,7 +65,7 @@
                             </mat-error>
                         </mat-form-field>
                             
-                        <mat-form-field appearance="fill" fxFlex>
+                        <mat-form-field appearance="outline" fxFlex>
                             <mat-select id="estado" formControlName="estado" placeholder="¿Cuál es el Estado del Vehículo?" required>
                                 <mat-option [value]="true">Activo</mat-option>
                                 <mat-option [value]="false">Inactivo</mat-option>

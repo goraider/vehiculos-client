@@ -5,22 +5,86 @@
             <div class="vehiculos-loading-shade" *ngIf="isLoading"><mat-spinner></mat-spinner></div>
 
             <mat-card fxFlex.xs="100%" fxFlex="90%">
-                <div fxLayout="row">
-                    <div fxFlex="100%">
-                        <mat-form-field appearance="outline">
-                            <mat-label>Buscar</mat-label>
-                            <input matInput [(ngModel)]="searchQuery" (keyup.enter)="applyFilter()" placeholder="Buscar">
-                            <button mat-icon-button flexFill matSuffix (click)="applyFilter()" color="primary">
-                                <mat-icon>search</mat-icon>
-                            </button>
-                        </mat-form-field>
+
+                <div fxLayout.gt-sm="row" fxLayout="column" fxLayoutGap.gt-sm="10px">
+
+                    <mat-form-field appearance="fill">
+                        <mat-date-range-input [rangePicker]="rangePicker">
+                            <input matStartDate [(ngModel)]="filtros.rango_fechas.inicio" placeholder="Fecha de Ingreso (Desde)" readonly>
+                            <input matEndDate [(ngModel)]="filtros.rango_fechas.fin" placeholder="Fecha de Ingreso (Hasta)" readonly>
+                        </mat-date-range-input>
+                        <mat-datepicker-toggle matSuffix [for]="rangePicker"></mat-datepicker-toggle>
+                        <mat-date-range-picker #rangePicker disabled="false">
+                            <mat-date-range-picker-actions>
+                            <button mat-button matDateRangePickerCancel>Cancelar</button>
+                            <button mat-raised-button color="primary" matDateRangePickerApply (click)="checarFechasFiltro()">Aplicar</button>
+                            </mat-date-range-picker-actions>
+                        </mat-date-range-picker>
+                    </mat-form-field>
+
+                    <mat-form-field appearance="fill">
+                        <mat-label>Buscar Modelo del Vehículo</mat-label>
+                        <input matInput [(ngModel)]="filtros.modelo" (keyup.escape)="cleanSearch()" (keyup.enter)="aplicarFiltro()" placeholder="Buscar Modelo del Vehículo...">
+                        <button matSuffix *ngIf="filtros.modelo" mat-icon-button (click)="cleanSearch()" [attr.aria-label]="'Clean Query'" [attr.aria-pressed]="'cleanQuery'">
+                            <mat-icon>close</mat-icon>
+                        </button>
+                        <button mat-icon-button matSuffix (click)="aplicarFiltro()">
+                            <mat-icon>search</mat-icon>
+                        </button>
+                    </mat-form-field>
+
+                </div>
+
+
+                <div fxLayout.gt-sm="row" fxLayout="column" fxLayoutGap.gt-sm="10px">
+
+                    <mat-form-field appearance="fill">
+                        <mat-select [(ngModel)]="filtros.marcas" (selectionChange)="aplicarFiltro()">
+                            <mat-option [value]="false">Todas las Marcas</mat-option>
+                            <mat-option *ngIf="filtrosCatalogos.marcas.length == 0" [value]="" disabled>Sin Marcas Asignadas</mat-option>
+                            <mat-option *ngFor="let marca of filtrosCatalogos.marcas" [value]="marca.id">
+                                {{marca.nombre}}
+                            </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+
+                    <mat-form-field appearance="fill">
+                        <mat-select [(ngModel)]="filtros.colores" (selectionChange)="aplicarFiltro()">
+                            <mat-option [value]="false">Todos los Colores</mat-option>
+                            <mat-option *ngIf="filtrosCatalogos.colores.length == 0" [value]="" disabled>Sin Colores Asignados</mat-option>
+                            <mat-option *ngFor="let color of filtrosCatalogos.colores" [value]="color.id">
+                                {{color.nombre}}
+                            </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+
+                    <mat-form-field appearance="fill" fxFlex="15%">
+                        <mat-select id="estado" [(ngModel)]="filtros.estado" placeholder="¿Cuál es el Estado del Vehículo?" (selectionChange)="aplicarFiltro()">
+                            <mat-option [value]="false">Todos los Estados</mat-option>
+                            <mat-option [value]=1>Activo</mat-option>
+                            <mat-option [value]=0>Inactivo</mat-option>
+                        </mat-select>
+                    </mat-form-field>
+
+                    <mat-form-field appearance="fill" fxFlex="15%">
+                        <mat-select id="asignado" [(ngModel)]="filtros.asignado" placeholder="¿Esta Asignado el Vehículo?" (selectionChange)="aplicarFiltro()">
+                            <mat-option [value]="false">Todos las Asignaciones</mat-option>
+                            <mat-option [value]=1>Si</mat-option>
+                            <mat-option [value]=0>No</mat-option>
+                        </mat-select>
+                    </mat-form-field>
+
+                </div>                
+
+                <div>
+                    <div fxFlex>
+                        <button mat-raised-button (click)="limpiarFiltro()" matTooltip="Limpiar Filtros"><mat-icon>cleaning_services</mat-icon></button>
+                    </div>
+                    <div fxFlex="none">
+                        <button mat-raised-button color="primary" routerLink="/vehiculos/nuevo"><mat-icon>add_circle</mat-icon> Crear Vehículo</button>
                     </div>
                 </div>
-                
-                <div fxLayout="row" style="padding-bottom:10px;">
-                    <div fxFlex></div>
-                    <button mat-raised-button color="primary" routerLink="/vehiculos/nuevo"><mat-icon>add_circle</mat-icon> Crear Vehículo</button>
-                </div>
+                <br>
 
                 <mat-divider [inset]="true"></mat-divider>
 

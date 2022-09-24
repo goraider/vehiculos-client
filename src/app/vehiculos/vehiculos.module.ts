@@ -1,5 +1,5 @@
 import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { CommonModule, DatePipe } from '@angular/common';
 
 import { SharedModule } from '../shared/shared.module';
 import { VehiculosRoutingModule } from './vehiculos-routing.module';
@@ -28,7 +28,8 @@ import { FormVehiculoComponent } from './form-vehiculos/form-vehiculos.component
   ],
   providers:[
     { provide: MAT_DATE_LOCALE, useValue: 'es-MX'},
-    { provide: MatPaginatorIntl, useValue: getEspPaginatorIntl() }
+    { provide: MatPaginatorIntl, useValue: getEspPaginatorIntl() },
+    DatePipe
   ]
 })
 export class VehiculosModule { }
