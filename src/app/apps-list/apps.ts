@@ -10,35 +10,13 @@ export class App {
 }
 
 export const APPS:App [] = [
-    { name:"Usuarios",      route: "usuarios",          icon: "assets/icons/users.svg",              permission:"" },
-    { name:"Vehículos",     route: "vehiculos",          icon: "assets/icons/car.svg",              permission:"" },
+    { name:"Usuarios",      route: "usuarios",          icon: "assets/icons/catalogo-users.svg",            permission:"" },
+    { name:"Vehículos",     route: "vehiculos",         icon: "assets/icons/car.svg",              permission:"" },
     
-    { name:'Herramientas Dev', route: "dev-tools",  icon: "assets/icons/toolbox.svg", isHub:true, hideHome:true, 
+    { name:'Catálogos', route: "catalogos",  icon: "assets/icons/catalogs.svg", isHub:true, hideHome:true, 
       children:[
-        {name:'Reportes MySQL',route:'dev-tools/mysql-reportes', icon:'insert_drive_file', permission:"6ARHQGj1N8YPkr02DY04K1Zy7HjIdDcj"}
+        {name:'Marcas',route:'catalogos/marcas', icon:'copyright'},
+        {name:'Colores',route:'catalogos/colores', icon:'invert_colors'}
       ],
-    },
-    /*
-    { name:'Pedidos',   route: "pedidos",       icon: "assets/icons/pedidos-hub.svg",
-      apps:[
-        { name:'Pedidos Ordinarios',        route: "pedidos/pedidos-ordinarios",        icon: "assets/icons/pedidos.svg" },
-        { name:'Recepción de Pedidos',      route: "pedidos/recepcion-pedidos",         icon: "assets/icons/recepcion-pedidos.svg" },
-      ]
-    },
-    { name:'Catalogos',   route: "catalogos",       icon: "assets/icons/catalogos.svg",
-      apps:[
-        { name:'Almacenes',        route: "catalogos/almacenes",        icon: "assets/icons/catalogo-almacenes.svg" },
-        { name:'Grupos',           route: "catalogos/grupos",           icon: "assets/icons/catalogo-grupos.svg" },
-      ]
-    },
-    
-    { name: "Seguridad", route: "seguridad", icon: "assets/icons/security-shield.svg", 
-        children: [
-            {name:'Permisos',route:'permisos',icon:'lock', permission:"RGMUpFAiRuv7UFoJroHP6CtvmpoFlQXl"},
-            {name:'Roles',route:'roles',icon:'people_alt', permission:"nrPqEhq2TX0mI7qT7glaOCJ7Iqx2QtPs"}
-        ] 
-    },*/
-    //{ name: "Viáticos", route: "configuracion", icon: "assets/icons/travel-expenses.png" },
-    //{ name: "Herramientas", route: "herramientas", icon: "assets/icons/toolbox.svg" },    
-    //{ name: "Configuración", route: "configuracion", icon: "assets/icons/settings.svg" },8QnE1cYkjjNAmM7qHSf1CSlPMJiQeqr5
+    }
 ]

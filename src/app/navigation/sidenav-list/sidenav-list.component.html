@@ -15,7 +15,7 @@
           <small style="color:#777">{{user.email}}</small>
         </div>
       </div>
-      <a mat-list-item routerLink="/profile" (click)="close()">
+      <a mat-list-item routerLink="usuarios/editar/{{user.id}}" (click)="close()">
         <mat-icon>account_circle</mat-icon> 
         <span>&nbsp;Editar cuenta</span>
       </a>

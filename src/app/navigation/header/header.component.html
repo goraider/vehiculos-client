@@ -3,12 +3,12 @@
       <mat-icon>home</mat-icon>
     </button-->
     <!--img src="{{(headerIcon)?headerIcon:'assets/logo-icon.svg'}}" alt="" style="height: 60%; width:auto;" fxHide.xs="true"-->
-    <img color="white" src="{{(headerIcon)?headerIcon:'assets/finger.svg'}}" alt="" style="height: 60%; width:auto;" fxHide.xs="true">
+    <img color="white" src="{{(headerIcon)?headerIcon:'assets/profile-icon.svg'}}" alt="" style="height: 60%; width:auto;" fxHide.xs="true">
     <span style="margin-left:10px" *ngIf="!selectedApp"><a routerLink="/">App</a></span> 
     <span class="header-links" *ngIf="selectedApp"><a *ngFor="let link of appHeaderLinks" routerLink="{{link.route}}">{{link.name}}</a></span>
 
     <span class="spacer"></span>
-    <span style="color:whitesmoke;">Menú</span>
+    <span style="color:whitesmoke;">Gestor de Vehículos</span>
     <span class="spacer"></span>
 
     <ng-template [ngIf]="isAuthenticated">
@@ -23,6 +23,7 @@
 
       <button mat-icon-button [matMenuTriggerFor]="menuAccount" fxHide.xs="xs">
         <img src="../../../assets/icons/users.svg" alt="" style="width:auto; margin:auto">
+        
         <!--mat-icon svgIcon="user-icon" aria-label="Avatar"></mat-icon-->
       </button>
 
@@ -32,7 +33,7 @@
             <strong>{{user.username}}</strong>
             <small style="color:#777">{{user.email}}</small>
             <br>
-            <button mat-button mat-raised-button color="primary" routerLink="/profile">
+            <button mat-button mat-raised-button color="primary" routerLink="usuarios/editar/{{user.id}}">
                 <mat-icon>account_circle</mat-icon> 
                 <span>&nbsp;Editar cuenta</span>
             </button>
@@ -68,7 +69,8 @@
     </ng-template>
 
     <ng-template [ngIf]="!isAuthenticated">
-      <a routerLink="/login"><mat-icon>account_circle</mat-icon></a>
+      <!-- <a routerLink="/login"><mat-icon>account_circle</mat-icon></a> -->
+      <a color="primary" routerLink="/usuarios/nuevo"><mat-icon>account_circle</mat-icon> ¡Registrate!</a>
     </ng-template>
     
   </mat-toolbar>

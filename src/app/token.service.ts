@@ -100,7 +100,7 @@ export class ErrorInterceptor implements HttpInterceptor {
     // We clone the request, because the original request is immutable
     return request.clone({
       setHeaders: {
-        'Authorization' : `Bearer ${accessToken}`,
+        'Authorization' : `x-token ${accessToken}`,
         'Content-type' : 'application/json'
       }
     });

@@ -74,9 +74,6 @@ export class FormVehiculoComponent implements OnInit {
     this.authUser = this.authService.getUserData();
     this.vehiculoForm.get('user').patchValue(this.authUser.id);
 
-    console.log(this.authUser.id);
-
-
     this.IniciarCatalogos(null);
   }
 
@@ -94,7 +91,6 @@ export class FormVehiculoComponent implements OnInit {
 
         this.catalogos = response.data;
 
-        console.log(this.catalogos);
         this.filteredCatalogs['marcas']     = this.vehiculoForm.get('marca').valueChanges.pipe(startWith(''),map(value => this._filter(value,'marcas','nombre')));
         this.filteredCatalogs['colores']    = this.vehiculoForm.get('color').valueChanges.pipe(startWith(''),map(value => this._filter(value,'colores','nombre')));
 
@@ -111,6 +107,7 @@ export class FormVehiculoComponent implements OnInit {
   }
 
   private _filter(value: any, catalog: string, valueField: string): string[] {
+
     if(this.catalogos[catalog]){
       let filterValue = '';
       if(value){
@@ -149,14 +146,20 @@ export class FormVehiculoComponent implements OnInit {
       this.vehiculosService.updateVehiculo(this.vehiculo.id,formData).subscribe(
         response =>{
           console.log("Actualizado", response);
-          this.sharedService.showSnackBar(response?.msg, 'Cerrar', 5000);
+          this.sharedService.showSnackBar(response?.msg, 'Cerrar', 7000);
           this.router.navigate(['/vehiculos']);
           this.isLoading = false;
         },
-        errorResponse => {
-          console.log(errorResponse);
+        HttpErrorResponse => {
+          let errorMessage = "Ocurrió un error.";
+          if(HttpErrorResponse.status == 403){
+            errorMessage = HttpErrorResponse.error.msg;
+          }
+          this.sharedService.showSnackBar(errorMessage, 'Cerrar', 5000);
           this.isLoading = false;
-      });
+          this.router.navigate(['/vehiculos']);
+        }
+      );
     }else{
       this.vehiculosService.createVehiculo(formData).subscribe(
         response =>{

@@ -29,13 +29,6 @@ export class AuthGuard implements CanActivate {
             break;
           }
         }
-        if(userApp.permission){
-          let userPermissions = JSON.parse(localStorage.getItem('permissions'));
-          if(!userPermissions[userApp.permission]){
-            this.router.navigateByUrl('/sin-permiso');
-            return false;
-          }
-        }
       }
     return true;
   }

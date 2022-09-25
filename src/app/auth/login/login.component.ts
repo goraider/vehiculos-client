@@ -13,7 +13,7 @@ export class LoginComponent implements OnInit {
   loginForm: FormGroup;
   isLoading:boolean = false;
 
-  avatarPlaceholder = 'assets/profile-icon.svg';
+  avatarPlaceholder = 'assets/logo.svg';
 
   constructor(private router: Router, private sharedService: SharedService, private authService: AuthService) { }
 

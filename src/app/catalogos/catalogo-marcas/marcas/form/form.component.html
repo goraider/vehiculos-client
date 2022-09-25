@@ -1,0 +1,23 @@
+<h1 mat-dialog-title><span *ngIf="marcas.id">Editar</span> <span *ngIf="!marcas.id">Nueva</span> Marca</h1>
+<div mat-dialog-content>
+    <div class="form-container" [formGroup]="marcaForm">
+        <div class="form-loading-shade" *ngIf="isLoading"><mat-spinner *ngIf="isLoading"></mat-spinner></div>
+
+        <div class="form-loading-shade" *ngIf="!isLoading && !marcas">No se encontraron los datos de la Marca</div>
+        <br>
+
+        <mat-form-field>
+            <input matInput id="nombre" formControlName="nombre" placeholder="Nombre" required>
+            <mat-error *ngIf="marcaForm.get('nombre').invalid && (marcaForm.get('nombre').dirty || marcaForm.get('nombre').touched)">
+                <span *ngIf="marcaForm.get('nombre').errors.required">El nombre es obligatorio</span>
+            </mat-error>
+        </mat-form-field>
+
+    </div>
+</div>
+<mat-divider></mat-divider>
+<div mat-dialog-actions>
+    <span fxFlex></span>
+    <button mat-button (click)='onNoClick()'>Cancelar</button>
+    <button mat-raised-button (click)="saveMarca()" color="primary" [disabled]="marcaForm.invalid || isLoading"><mat-icon>save</mat-icon> Guardar</button>
+</div>

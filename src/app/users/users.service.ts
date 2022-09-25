@@ -9,7 +9,7 @@ import { map } from 'rxjs/operators';
 })
 export class UsersService {
 
-  url = `${environment.base_url}signin/`;
+  url = `${environment.base_url}signin`;
 
 
   constructor(private http: HttpClient) { }
@@ -18,16 +18,15 @@ export class UsersService {
 
 
   getUserList():Observable<any> {
-    return this.http.get<any>(this.url+'lista-usuarios').pipe(
+    return this.http.get<any>(this.url+'/lista-usuarios').pipe(
       map( response => {
         return response;
       })
     );
   }
 
-
   updateUser(payload,id) {
-    return this.http.put<any>(this.url+'/'+id,payload).pipe(
+    return this.http.put<any>(this.url+'/actualizar-usuario/'+id,payload).pipe(
       map( (response) => {
         return response;
       }

@@ -1,3 +1,4 @@
+import { HttpErrorResponse } from '@angular/common/http';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { SharedService } from '../../shared/shared.service';
 
@@ -81,18 +82,17 @@ export class ListVehiculosComponent implements OnInit {
         this.isLoading = true;
 
         if(response.error) {
+          
           let errorMessage = response.msg;
           this.sharedService.showSnackBar(errorMessage, 'Cerrar', 3000);
+
         } else {
 
-          console.log(response);
           this.filtrosCatalogos.marcas = response.data.marcas;
           this.filtrosCatalogos.colores = response.data.colores;
         
         }
-
         this.isLoading = false; 
-
       } 
     );
 
@@ -110,9 +110,6 @@ export class ListVehiculosComponent implements OnInit {
         per_page: event.pageSize,      
       };
     }
-
-    // params.query = this.searchQuery;
-
 
     if(this.filtros.marcas){
       params.marca = this.filtros.marcas;
@@ -136,14 +133,12 @@ export class ListVehiculosComponent implements OnInit {
     }
 
     if(this.filtros.rango_fechas.inicio){
+
       params.fecha_inicio = this.datepipe.transform(this.filtros.rango_fechas.inicio, 'yyyy-MM-dd');
       params.fecha_fin = this.datepipe.transform(this.filtros.rango_fechas.fin, 'yyyy-MM-dd');
-      console.log(params);
+
     }
-
     
-  
-
     this.vehiculosService.getVehiculosList(params).subscribe(
       response =>{
         if(response.error) {
@@ -184,16 +179,25 @@ export class ListVehiculosComponent implements OnInit {
       data: {dialogTitle:'Eliminar Vehículo',dialogMessage:'¿Está seguro de eliminar el Vehículo?',btnColor:'warn',btnText:'Eliminar'}
     });
 
-    dialogRef.afterClosed().subscribe(reponse => {
-      if(reponse){
-        this.vehiculosService.deleteVehiculo(id).subscribe(
-          response => {
-            this.sharedService.showSnackBar(response?.msg, 'Cerrar', 5000);
-            this.loadVehiculosData(null);
-          }
-        );
-      }
-    });
+    dialogRef.afterClosed().subscribe(
+      reponse => {
+        if(reponse){
+          this.vehiculosService.deleteVehiculo(id).subscribe(
+            response => {
+              this.sharedService.showSnackBar(response?.msg, 'Cerrar', 5000);
+              this.loadVehiculosData(null);
+            },HttpErrorResponse => {
+              let errorMessage = "Ocurrió un error.";
+              if(HttpErrorResponse.status == 403){
+                errorMessage = HttpErrorResponse.error.msg;
+              }
+              this.sharedService.showSnackBar(errorMessage, 'Cerrar', 5000);
+              this.isLoading = false;
+            }
+          );
+        }
+      },
+      );
   }
 
   limpiarFiltro(){

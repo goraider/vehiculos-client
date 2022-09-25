@@ -51,8 +51,9 @@ export class FormComponent implements OnInit {
 
     this.route.paramMap.subscribe(params => {
       if(params.get('id')){
-        //let id = params.get('id');
-        this.usuarioForm.patchValue(this.usuario);
+        this.usuario = this.authUser;
+        this.usuarioForm.get('username').patchValue(this.usuario?.username);
+        this.usuarioForm.get('email').patchValue(this.usuario?.email);
 
       }else{
         this.usuarioForm.get('password').setValidators([Validators.minLength(6), Validators.required]);
@@ -94,7 +95,7 @@ export class FormComponent implements OnInit {
     if(this.usuario.id){
       this.usersService.updateUser(this.usuarioForm.value,this.usuario.id).subscribe(
         response=>{
-          if(response.guardado){
+          if(response.succesfull === true){
             this.sharedService.showSnackBar('Datos guardados con éxito', null, 3000);
             if(this.authUser.id == response.usuario.id){
               this.authService.updateUserData(response.usuario);
