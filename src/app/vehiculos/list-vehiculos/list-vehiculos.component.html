@@ -61,16 +61,16 @@
                     <mat-form-field appearance="fill" fxFlex="15%">
                         <mat-select id="estado" [(ngModel)]="filtros.estado" placeholder="¿Cuál es el Estado del Vehículo?" (selectionChange)="aplicarFiltro()">
                             <mat-option [value]="false">Todos los Estados</mat-option>
-                            <mat-option [value]=1>Activo</mat-option>
-                            <mat-option [value]=0>Inactivo</mat-option>
+                            <mat-option value="true">Activo</mat-option>
+                            <mat-option value="false">Inactivo</mat-option>
                         </mat-select>
                     </mat-form-field>
 
                     <mat-form-field appearance="fill" fxFlex="15%">
                         <mat-select id="asignado" [(ngModel)]="filtros.asignado" placeholder="¿Esta Asignado el Vehículo?" (selectionChange)="aplicarFiltro()">
                             <mat-option [value]="false">Todos las Asignaciones</mat-option>
-                            <mat-option [value]=1>Si</mat-option>
-                            <mat-option [value]=0>No</mat-option>
+                            <mat-option value="true">Si</mat-option>
+                            <mat-option value="false">No</mat-option>
                         </mat-select>
                     </mat-form-field>
 

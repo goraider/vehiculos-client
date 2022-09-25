@@ -107,7 +107,7 @@ export class ListVehiculosComponent implements OnInit {
     }else{
       params = {
         page: event.pageIndex+1,
-        per_page: event.pageSize,
+        per_page: event.pageSize,      
       };
     }
 
@@ -151,9 +151,9 @@ export class ListVehiculosComponent implements OnInit {
           this.sharedService.showSnackBar(errorMessage, null, 3000);
         } else {
           if(response.total > 0){
-            this.dataSource = response.vehiculos;
+            this.dataSource = response.data;
             this.resultsLength = response.total;
-            this.sharedService.showSnackBar(response?.msg, 'Cerrar', 5000);
+            //this.sharedService.showSnackBar(response?.msg, 'Cerrar', 5000);
           }else{
             this.dataSource = [];
             this.resultsLength = 0;
@@ -222,6 +222,7 @@ export class ListVehiculosComponent implements OnInit {
 
   cleanSearch(){
     this.filtros.modelo = '';
+    this.limpiarFiltro();
   }
 
 }

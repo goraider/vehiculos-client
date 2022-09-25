@@ -1,6 +1,7 @@
-import { Component, Inject, OnInit } from '@angular/core';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { FormGroup, Validators, FormBuilder } from '@angular/forms';
+import { Component, OnInit } from '@angular/core';
+import { SharedService } from '../../shared/shared.service';
+
+import { Validators, FormBuilder } from '@angular/forms';
 import { startWith, map } from 'rxjs/operators';
 import { Router, ActivatedRoute } from '@angular/router';
 
@@ -16,6 +17,7 @@ import { User } from '../../auth/models/user';
 export class FormVehiculoComponent implements OnInit {
 
   constructor(
+    private sharedService: SharedService,
     private vehiculosService: VehiculosService,
     private authService: AuthService,
     private fb: FormBuilder,
@@ -146,7 +148,8 @@ export class FormVehiculoComponent implements OnInit {
     if(this.vehiculo.id){
       this.vehiculosService.updateVehiculo(this.vehiculo.id,formData).subscribe(
         response =>{
-          console.log("Respuesta", response);
+          console.log("Actualizado", response);
+          this.sharedService.showSnackBar(response?.msg, 'Cerrar', 5000);
           this.router.navigate(['/vehiculos']);
           this.isLoading = false;
         },
@@ -157,7 +160,9 @@ export class FormVehiculoComponent implements OnInit {
     }else{
       this.vehiculosService.createVehiculo(formData).subscribe(
         response =>{
-          console.log(response);
+          console.log("Guardado",response);
+          this.sharedService.showSnackBar(response?.msg, 'Cerrar', 5000);
+          this.router.navigate(['/vehiculos']);
           this.isLoading = false;
       },
         errorResponse => {
