@@ -1,4 +1,4 @@
 export const environment = {
   production: true,
-  base_url: 'http://localhost:4001/api/',
+  base_url: 'https://gestor-vehiculos.herokuapp.com/api/',
 };
