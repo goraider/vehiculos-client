@@ -174,33 +174,55 @@ export class ListVehiculosComponent implements OnInit {
   }
 
   confirmDeleteVehiculo(id:number = 0){
-    const dialogRef = this.dialog.open(ConfirmActionDialogComponent, {
-      width: '500px',
-      data: {dialogTitle:'Eliminar Vehículo',dialogMessage:'¿Está seguro de eliminar el Vehículo?',btnColor:'warn',btnText:'Eliminar'}
-    });
+      const dialogRef = this.dialog.open(ConfirmActionDialogComponent, {
+        width: '500px',
+        data: {dialogTitle:'Eliminar Vehículo',dialogMessage:'¿Está seguro de eliminar el Vehículo?',btnColor:'warn',btnText:'Eliminar'}
+      });
 
-    dialogRef.afterClosed().subscribe(
-      reponse => {
-        if(reponse){
-          this.vehiculosService.deleteVehiculo(id).subscribe(
-            response => {
-              this.sharedService.showSnackBar(response?.msg, 'Cerrar', 5000);
-              this.loadVehiculosData(null);
-            },HttpErrorResponse => {
-              let errorMessage = "Ocurrió un error.";
-              if(HttpErrorResponse.status == 403){
-                errorMessage = HttpErrorResponse.error.msg;
-              }
-              this.sharedService.showSnackBar(errorMessage, 'Cerrar', 5000);
-              this.isLoading = false;
-            }
-          );
-        }
-      },
-      );
+      dialogRef.afterClosed().subscribe(
+        reponse => {
+          if(reponse){
+              this.vehiculosService.deleteVehiculo(id).subscribe({
+                next: (response) => {
+                  
+                  console.log(response,"completado");
+                  this.sharedService.showSnackBar(response?.msg, 'Cerrar', 5000);
+                  this.loadVehiculosData(null);
+                },
+
+                error(error: HttpErrorResponse) {
+                  console.log(error.error);
+
+                  let errorMessage = "Ocurrió un error.";
+                  if(error.status === 401){
+                    errorMessage = error.error?.msg;
+                    this.sharedService.showSnackBar(errorMessage, 'Cerrar', 5000);
+                  }
+                  
+                  
+                }
+              });
+          }
+
+      });
   }
+    
+    // if(reponse){
+    //   this.vehiculosService.deleteVehiculo(id).subscribe((response) => {
+    //       this.sharedService.showSnackBar(response?.msg, 'Cerrar', 5000);
+    //       this.loadVehiculosData(null);
+    //     },HttpErrorResponse => {
+    //       let errorMessage = "Ocurrió un error.";
+    //       if(HttpErrorResponse.status == 403){
+    //         errorMessage = HttpErrorResponse.error.msg;
+    //       }
+    //       this.sharedService.showSnackBar(errorMessage, 'Cerrar', 5000);
+    //       this.isLoading = false;
+    //     }
+    //   );
 
-  limpiarFiltro(){
+    // }
+    limpiarFiltro(){
     this.filtros.marca = false;
     this.filtros.modelo = '';
     this.filtros.color = false;
